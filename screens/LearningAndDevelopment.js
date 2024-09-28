@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshControl } from 'react-native';
-import { ScrollView, Box, FlatList, VStack, HStack, Text, Progress, Button, Modal, useToast } from 'native-base';
+import { Box, FlatList, Text, Progress, Button, Modal, useToast, VStack } from 'native-base';
 import { supabase } from '../configs/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -98,52 +98,32 @@ const LearningAndDevelopment = () => {
     fetchCertifications();
   }, []);
 
-  return (
-    <ScrollView 
-      contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        padding={4}
-        backgroundColor="#009688"
-        shadow={2}
-        rounded="md"
-        mb={4}
-      >
-        <HStack alignItems="center">
-          <Text fontSize="2xl" fontWeight="bold" color="white" mr={4}>
-            Colabore
-          </Text>
-          <VStack alignItems="flex-start">
-            <Text fontSize="lg" color="white">Learning and Development</Text>
-          </VStack>
-        </HStack>
-      </Box>
-      
-      <Box
-        padding={4}
-        backgroundColor="#fff"
-        borderRadius={10}
-        mb={4}
-      >
-        <Text fontSize="lg" mb={4}>My Courses</Text>
-        <FlatList
-          data={courses}
-          renderItem={renderCourseItem}
-          keyExtractor={item => item.id}
-        />
+  const renderItem = ({ item, index }) => {
+    if (index === 0) {
+      return (
+        <VStack space={4}>
+          <Text fontSize="lg" mb={4}>My Courses</Text>
+          {courses.map(course => renderCourseItem({ item: course }))}
+          <Text fontSize="lg" mb={4} mt={6}>My Certifications</Text>
+        </VStack>
+      );
+    }
+    return renderCertificationItem({ item });
+  };
 
-        <Text fontSize="lg" mb={4} mt={6}>My Certifications</Text>
-        <FlatList
-          data={certifications}
-          renderItem={renderCertificationItem}
-          keyExtractor={item => item.id}
-        />
-      </Box>
+  const data = [{ id: 'header' }, ...certifications];
+
+  return (
+    <>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item.id || `cert-${index}`}
+        contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
 
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
         <Modal.Content>
@@ -155,7 +135,7 @@ const LearningAndDevelopment = () => {
           </Modal.Body>
         </Modal.Content>
       </Modal>
-    </ScrollView>
+    </>
   );
 };
 

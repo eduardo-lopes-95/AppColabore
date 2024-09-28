@@ -30,23 +30,6 @@ const Analitycs = () => {
       <ScrollView contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}>
         <Box
           padding={4}
-          backgroundColor="#009688"
-          shadow={2}
-          rounded="md"
-          mb={4}
-        >
-          <HStack alignItems="center">
-            <Text fontSize="2xl" fontWeight="bold" color="white" mr={4}>
-              Colabore
-            </Text>
-            <VStack alignItems="flex-start">
-              <Text fontSize="lg" color="white">Analytics de Métricas-Chave</Text>
-            </VStack>
-          </HStack>
-        </Box>
-        
-        <Box
-          padding={4}
           backgroundColor="#fff"
           borderRadius={10}
           mb={4}

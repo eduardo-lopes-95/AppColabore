@@ -1,5 +1,8 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Box, Text, HStack, IconButton } from 'native-base';
+import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import Home from '../screens/Home';
 import Job from '../screens/Job';
@@ -18,8 +21,31 @@ import Analitycs from '../screens/Analitycs';
 
 const Stack = createNativeStackNavigator();
 
+const CustomHeader = ({ title }) => {
+  const navigation = useNavigation();
+
+  return (
+    <Box bg="teal.500" p={4} safeAreaTop>
+      <HStack alignItems="center" justifyContent="space-between">
+        <IconButton
+          icon={<Feather name="menu" size={24} color="white" />}
+          onPress={() => navigation.toggleDrawer()}
+        />
+        <Text color="white" fontSize="xl" fontWeight="bold">
+          {title}
+        </Text>
+        <Box width={10} />
+      </HStack>
+    </Box>
+  );
+};
+
 const AppStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator
+    screenOptions={{
+      header: ({ route }) => <CustomHeader title={route.name} />,
+    }}
+  >
     <Stack.Screen name="Home" component={Home} />
     <Stack.Screen name="Job" component={Job} />
     <Stack.Screen name="JobListing" component={JobListing} />

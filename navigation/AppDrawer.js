@@ -37,7 +37,7 @@ const AppDrawer = () => {
       initialRouteName="AppStack"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="AppStack" component={AppStack} options={{ title: 'Home' }} />
+      <Drawer.Screen name="AppStack" component={AppStack} options={{ headerShown: false }} />
     </Drawer.Navigator>
   );
 };

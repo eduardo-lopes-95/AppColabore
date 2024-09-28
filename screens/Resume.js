@@ -107,24 +107,6 @@ const Resume = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <VStack flex={1} p={4}>
           <Box
-            justifyContent="center"
-            alignItems="center"
-            padding={4}
-            backgroundColor="#009688"
-            shadow={2}
-            rounded="md"
-            mb={4}
-          >
-            <HStack alignItems="center">
-              <Text fontSize="2xl" fontWeight="bold" color="white" mr={4}>
-                Colabore
-              </Text>
-              <VStack alignItems="flex-start">
-                <Text fontSize="lg" color="white">Cadastrar Currículum</Text>
-              </VStack>
-            </HStack>
-          </Box>
-          <Box
             padding={4}
             backgroundColor="#fff"
             borderRadius={10}

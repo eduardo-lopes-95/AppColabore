@@ -5,9 +5,6 @@ import HorizontalSwipeableJobListing from '../components/HorizontalSwipeableJobL
 function JobListing() {
   return (
     <ScrollView flex={1} bg="gray.900">
-      <Box bg="teal.700" p={4} alignItems="center">
-        <Logo />
-      </Box>
       <Box
         flex={1}
         bg="gray.900"

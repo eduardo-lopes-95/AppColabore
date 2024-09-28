@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Box, VStack, HStack, Button, Text, FlatList, Modal, FormControl, Input, useDisclose, useToast } from 'native-base';
+import { Box, VStack, HStack, Button, Text, FlatList, Modal, FormControl, Input, useDisclose, useToast, Spinner, Center } from 'native-base';
 import { format } from 'date-fns';
 import { supabase } from '../configs/supabaseClient'; 
 import { useAuth } from '../contexts/AuthContext';
@@ -11,12 +11,14 @@ const DigitalTimesheet = () => {
   const [leaveRequest, setLeaveRequest] = useState({ type: '', startDate: '', endDate: '' });
   const { user } = useAuth();
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchTimeEntries();
   }, []);
 
   const fetchTimeEntries = async () => {
+    setIsLoading(true);
     const { data, error } = await supabase
       .from('TimeEntries')
       .select('*')
@@ -25,9 +27,15 @@ const DigitalTimesheet = () => {
 
     if (error) {
       console.error('Error fetching time entries:', error);
+      toast.show({
+        title: "Erro ao carregar registros",
+        status: "error",
+        description: error.message
+      });
     } else {
       setTimeEntries(data);
     }
+    setIsLoading(false);
   };
 
   const registerTime = async () => {
@@ -88,63 +96,62 @@ const DigitalTimesheet = () => {
     setLeaveRequest({ type: '', startDate: '', endDate: '' });
   };
 
-  return (
-    <ScrollView contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}>
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        padding={4}
-        backgroundColor="#009688"
-        shadow={2}
-        rounded="md"
-        mb={4}
-      >
-        <HStack alignItems="center">
-          <Text fontSize="2xl" fontWeight="bold" color="white" mr={4}>
-            Colabore
-          </Text>
-          <VStack alignItems="flex-start">
-            <Text fontSize="lg" color="white">Folha de Ponto Digital</Text>
-          </VStack>
-        </HStack>
-      </Box>
-      
-      <Box
-        padding={4}
-        backgroundColor="#fff"
-        borderRadius={10}
-        mb={4}
-      >
-        <VStack space={4}>
-          <Button backgroundColor="#009688" onPress={registerTime}>Registrar Ponto</Button>
-          <Button backgroundColor="#009688" onPress={onOpen}>Solicitar Férias/Licença</Button>
-          
-          <VStack space={2}>
-            <Text fontSize="lg" fontWeight="bold">Relatórios</Text>
-            <Text>Horas Trabalhadas: {reports.hoursWorked}h</Text>
-            <Text>Absenteísmo: {reports.absences} dias</Text>
-          </VStack>
-          
-          <VStack space={2}>
-            <Text fontSize="lg" fontWeight="bold">Registros de Ponto</Text>
-            <FlatList 
-              data={timeEntries}
-              renderItem={({item}) => (
-                <Box
-                  padding={2}
-                  borderColor="#ccc"
-                  borderWidth={1}
-                  borderRadius={5}
-                  mb={2}
-                >
-                  <Text>{format(new Date(item.timestamp), "dd/MM/yyyy HH:mm:ss")} - {item.entry_type}</Text>
-                </Box>
-              )}
-              keyExtractor={item => item.id}
-            />
-          </VStack>
+  const renderHeader = () => (
+    <Box
+      padding={4}
+      backgroundColor="#fff"
+      borderRadius={10}
+      mb={4}
+    >
+      <VStack space={4}>
+        <Button backgroundColor="#009688" onPress={registerTime}>Registrar Ponto</Button>
+        <Button backgroundColor="#009688" onPress={onOpen}>Solicitar Férias/Licença</Button>
+        
+        <VStack space={2}>
+          <Text fontSize="lg" fontWeight="bold">Relatórios</Text>
+          <Text>Horas Trabalhadas: {reports.hoursWorked}h</Text>
+          <Text>Absenteísmo: {reports.absences} dias</Text>
         </VStack>
-      </Box>
+        
+        <Text fontSize="lg" fontWeight="bold">Registros de Ponto</Text>
+      </VStack>
+    </Box>
+  );
+
+  const renderItem = ({item}) => (
+    <Box
+      padding={2}
+      borderColor="#ccc"
+      borderWidth={1}
+      borderRadius={5}
+      mb={2}
+    >
+      <Text>{format(new Date(item.timestamp), "dd/MM/yyyy HH:mm:ss")} - {item.entry_type}</Text>
+    </Box>
+  );
+
+  if (isLoading) {
+    return (
+      <Center flex={1}>
+        <Spinner size="lg" color="#009688" />
+      </Center>
+    );
+  }
+
+  return (
+    <>
+      <FlatList 
+        data={timeEntries}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={renderHeader}
+        contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}
+        ListEmptyComponent={
+          <Center p={10}>
+            <Text>Nenhum registro de ponto encontrado.</Text>
+          </Center>
+        }
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <Modal.Content>
@@ -187,7 +194,7 @@ const DigitalTimesheet = () => {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-    </ScrollView>
+    </>
   );
 };
 

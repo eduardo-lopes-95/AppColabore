@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Box, Text, VStack, HStack, Badge, IconButton, FlatList } from 'native-base';
+import { Box, Text, VStack, HStack, Badge, IconButton, FlatList } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { supabaseHelper } from '../configs/supabaseClient';
 
@@ -30,75 +30,62 @@ const TaskManagement = () => {
     }
   };
 
-  return (
-    <ScrollView contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}>
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        padding={4}
-        backgroundColor="#009688"
-        shadow={2}
-        rounded="md"
-        mb={4}
-      >
-        <HStack alignItems="center">
-          <Text fontSize="2xl" fontWeight="bold" color="white" mr={4}>
-            Colabore
-          </Text>
-          <VStack alignItems="flex-start">
-            <Text fontSize="lg" color="white">Gerenciamento de Tarefas</Text>
-          </VStack>
+  const renderItem = ({ item }) => (
+    <Box
+      padding={4}
+      borderColor="#ccc"
+      borderWidth={1}
+      borderRadius={5}
+      mb={4}
+    >
+      <Text fontSize="lg" fontWeight="bold" mb={2}>
+        {item.title}
+      </Text>
+      <HStack justifyContent="space-between" alignItems="center" mb={2}>
+        <Text>Prazo: {item.deadline}</Text>
+        <Badge colorScheme={item.priority === 'Alta' ? 'red' : item.priority === 'Média' ? 'yellow' : 'green'}>
+          {item.priority}
+        </Badge>
+      </HStack>
+      <HStack justifyContent="space-between" alignItems="center">
+        <Text>Status: {item.status}</Text>
+        <HStack space={2}>
+          <IconButton
+            icon={<Feather name="check" size={20} color="green" />}
+            onPress={() => updateTaskStatus(item.id, 'Concluída')}
+          />
+          <IconButton
+            icon={<Feather name="clock" size={20} color="orange" />}
+            onPress={() => updateTaskStatus(item.id, 'Em andamento')}
+          />
+          <IconButton
+            icon={<Feather name="x" size={20} color="red" />}
+            onPress={() => updateTaskStatus(item.id, 'Pendente')}
+          />
         </HStack>
-      </Box>
-      <Box
-        padding={4}
-        backgroundColor="#fff"
-        borderRadius={10}
-        mb={4}
-      >
-        <Text fontSize="lg" mb={4}>Minhas Tarefas</Text>
-        <FlatList
-          data={tasks}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <Box
-              padding={4}
-              borderColor="#ccc"
-              borderWidth={1}
-              borderRadius={5}
-              mb={4}
-            >
-              <Text fontSize="lg" fontWeight="bold" mb={2}>
-                {item.title}
-              </Text>
-              <HStack justifyContent="space-between" alignItems="center" mb={2}>
-                <Text>Prazo: {item.deadline}</Text>
-                <Badge colorScheme={item.priority === 'Alta' ? 'red' : item.priority === 'Média' ? 'yellow' : 'green'}>
-                  {item.priority}
-                </Badge>
-              </HStack>
-              <HStack justifyContent="space-between" alignItems="center">
-                <Text>Status: {item.status}</Text>
-                <HStack space={2}>
-                  <IconButton
-                    icon={<Feather name="check" size={20} color="green" />}
-                    onPress={() => updateTaskStatus(item.id, 'Concluída')}
-                  />
-                  <IconButton
-                    icon={<Feather name="clock" size={20} color="orange" />}
-                    onPress={() => updateTaskStatus(item.id, 'Em andamento')}
-                  />
-                  <IconButton
-                    icon={<Feather name="x" size={20} color="red" />}
-                    onPress={() => updateTaskStatus(item.id, 'Pendente')}
-                  />
-                </HStack>
-              </HStack>
-            </Box>
-          )}
-        />
-      </Box>
-    </ScrollView>
+      </HStack>
+    </Box>
+  );
+
+  const ListHeader = () => (
+    <Box
+      padding={4}
+      backgroundColor="#fff"
+      borderRadius={10}
+      mb={4}
+    >
+      <Text fontSize="lg" mb={4}>Minhas Tarefas</Text>
+    </Box>
+  );
+
+  return (
+    <FlatList
+      data={tasks}
+      keyExtractor={item => item.id}
+      renderItem={renderItem}
+      ListHeaderComponent={ListHeader}
+      contentContainerStyle={{ padding: 10, backgroundColor: '#fff' }}
+    />
   );
 };
 
