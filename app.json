@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "colabore",
+    "slug": "snack-771bb679-b225-423c-a3ce-7fa2dccdd1fa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "EXPO_PUBLIC_SUPABASE_URL": "https://qvokrlwakxexncqpento.supabase.co",
+      "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2b2tybHdha3hleG5jcXBlbnRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU5MDE4NjYsImV4cCI6MjA0MTQ3Nzg2Nn0.5hwBM4fDG3aoVPY9pRHiTRsMiJi6Vd_V164D0fZGDIY"
+    }
+  }
+}
