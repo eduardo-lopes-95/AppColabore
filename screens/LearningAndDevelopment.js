@@ -114,7 +114,7 @@ const LearningAndDevelopment = () => {
   const data = [{ id: 'header' }, ...certifications];
 
   return (
-    <>
+    <Box flex={1}>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -135,7 +135,7 @@ const LearningAndDevelopment = () => {
           </Modal.Body>
         </Modal.Content>
       </Modal>
-    </>
+    </Box>
   );
 };
 
