@@ -1,9 +1,16 @@
 import React, { useContext } from 'react';
 import { Box, VStack, Avatar, Pressable, Text } from 'native-base';
 import { ProfileContext } from '../contexts/ProfileContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const CustomDrawerContent = ({ navigation }) => {
   const { profileImage } = useContext(ProfileContext);
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigation.navigate('Home'); // Navigate to Home screen after signing out
+  };
 
   return (
     <Box flex={1} p={4}>
@@ -63,6 +70,13 @@ const CustomDrawerContent = ({ navigation }) => {
         <Pressable onPress={() => navigation.navigate('Analitycs')}>
           <Box borderBottomWidth={1} borderBottomColor="gray.200" py={2}>
             <Text>Análises</Text>
+          </Box>
+        </Pressable>
+        
+        {/* Add Sign Out button */}
+        <Pressable onPress={handleSignOut}>
+          <Box borderBottomWidth={1} borderBottomColor="gray.200" py={2}>
+            <Text color="red.500">Sair</Text>
           </Box>
         </Pressable>
       </VStack>
